@@ -6,9 +6,9 @@ defmodule ExVCR.Config do
   alias ExVCR.Setting
 
   @doc """
-  Initializes library dir to store cassette json files.
-    - vcr_dir: directory for storing recorded json file.
-    - custom_dir: directory for placing custom json file.
+  Initializes library dir to store cassette files.
+    - vcr_dir: directory for storing recorded file.
+    - custom_dir: directory for placing custom file.
   """
   def cassette_library_dir(vcr_dir, custom_dir \\ nil) do
     Setting.set(:cassette_library_dir, vcr_dir)
@@ -47,5 +47,21 @@ defmodule ExVCR.Config do
   def response_headers_blacklist(headers_blacklist) do
     blacklist = Enum.map(headers_blacklist, fn(x) -> String.downcase(x) end)
     Setting.set(:response_headers_blacklist, blacklist)
+  end
+
+  @doc """
+  Set the cassettes formatter to json as it is by default.
+  """
+  def format(:json) do
+    Setting.set(:format, "json")
+    Setting.set(:format_module, ExVCR.JSON)
+  end
+
+  @doc """
+  Set the cassettes formatter to raw Erlang.
+  """
+  def format(:raw) do
+    Setting.set(:format, "raw")
+    Setting.set(:format_module, ExVCR.Marshal)
   end
 end

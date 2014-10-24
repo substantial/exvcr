@@ -14,6 +14,8 @@ defmodule ExVCR.Setting do
       :ets.insert(@ets_table, {:custom_library_dir, @default_custom_path})
       :ets.insert(@ets_table, {:filter_sensitive_data, []})
       :ets.insert(@ets_table, {:response_headers_blacklist, []})
+      :ets.insert(@ets_table, {:format, 'json'})
+      :ets.insert(@ets_table, {:format_module, ExVCR.JSON})
     end
   end
 

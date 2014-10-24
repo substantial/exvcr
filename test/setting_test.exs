@@ -27,4 +27,14 @@ defmodule ExVCR.SettingTest do
     ExVCR.Setting.set(:response_headers_blacklist, ["Content-Type", "Accept"])
     assert ExVCR.Setting.get(:response_headers_blacklist) == ["Content-Type", "Accept"]
   end
+
+  test "set format" do
+    ExVCR.Setting.set(:format, "erl")
+    assert ExVCR.Setting.get(:format) == "erl"
+  end
+
+  test "set format_module" do
+    ExVCR.Setting.set(:format_module, ExVCR.Marshal)
+    assert ExVCR.Setting.get(:format_module) == ExVCR.Marshal
+  end
 end

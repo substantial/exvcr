@@ -7,7 +7,7 @@ defmodule ExVCR.Task.Runner do
   @check_header_format   "  ~-40s ~-20s ~-20s\n"
   @check_content_format  "  ~-40s ~-20w ~-20w\n"
   @date_format   "~4..0B/~2..0B/~2..0B ~2..0B:~2..0B:~2..0B"
-  @json_file_pattern ~r/\.json$/
+  @file_pattern ~r/\.(json|raw)$/
 
   @doc """
   Use specified path to show the list of vcr cassettes.
@@ -20,15 +20,15 @@ defmodule ExVCR.Task.Runner do
   end
 
   defp read_cassettes(path) do
-    file_names = find_json_files(path)
+    file_names = find_files(path)
     date_times = Enum.map(file_names, &(extract_last_modified_time(path, &1)))
     Enum.zip(file_names, date_times)
   end
 
-  defp find_json_files(path) do
+  defp find_files(path) do
     if File.exists?(path) do
       File.ls!(path)
-        |> Enum.filter(&(&1 =~ @json_file_pattern))
+        |> Enum.filter(&(&1 =~ @file_pattern))
         |> Enum.sort
     else
       raise %ExVCR.PathNotFoundError{message: "Specified path '#{path}' for reading cassettes was not found."}
@@ -51,7 +51,7 @@ defmodule ExVCR.Task.Runner do
   Use specified path to delete cassettes.
   """
   def delete_cassettes(path, file_patterns, is_interactive \\ false) do
-    path |> find_json_files
+    path |> find_files
          |> Enum.filter(&(&1 =~ file_patterns))
          |> Enum.each(&(delete_and_print_name(path, &1, is_interactive)))
   end

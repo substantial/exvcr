@@ -6,6 +6,7 @@ defmodule ExVCR.Recorder do
   alias ExVCR.Handler
   alias ExVCR.Actor.Responses
   alias ExVCR.Actor.Options
+  alias ExVCR.Setting
 
   @doc """
   Initialize recorder.
@@ -21,8 +22,9 @@ defmodule ExVCR.Recorder do
     if stub = options(recorder)[:stub] do
       set(stub, recorder)
     else
-      load_from_json(recorder)
+      load(recorder)
     end
+
     recorder
   end
 
@@ -35,23 +37,23 @@ defmodule ExVCR.Recorder do
   end
 
   @doc """
-  Load record-data from json file.
+  Load record-data from a file.
   """
-  def load_from_json(recorder) do
+  def load(recorder) do
     file_path   = get_file_path(recorder)
     custom_mode = options(recorder)[:custom]
     adapter     = options(recorder)[:adapter]
-    responses   = ExVCR.JSON.load(file_path, custom_mode, adapter)
+    responses   = Setting.get(:format_module).load(file_path, custom_mode, adapter)
     set(responses, recorder)
   end
 
   @doc """
-  Save record-data into json file.
+  Save record-data into a file.
   """
   def save(recorder) do
     file_path = get_file_path(recorder)
     if File.exists?(file_path) == false do
-      ExVCR.JSON.save(file_path, ExVCR.Recorder.get(recorder))
+      Setting.get(:format_module).save(file_path, ExVCR.Recorder.get(recorder))
     end
   end
 
@@ -64,7 +66,7 @@ defmodule ExVCR.Recorder do
       true  -> ExVCR.Setting.get(:custom_library_dir)
       _     -> ExVCR.Setting.get(:cassette_library_dir)
     end
-    "#{directory}/#{opts[:fixture]}.json"
+    "#{directory}/#{opts[:fixture]}.#{Setting.get(:format)}"
   end
 
   def options(recorder),        do: Options.get(recorder.options)

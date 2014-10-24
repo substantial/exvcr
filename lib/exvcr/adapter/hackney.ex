@@ -59,7 +59,7 @@ defmodule ExVCR.Adapter.Hackney do
   end
 
   @doc """
-  Callback from ExVCR.Handler when response is retrieved from the json file cache.
+  Callback from ExVCR.Handler when response is retrieved from the file cache.
   """
   def hook_response_from_cache(nil), do: nil
   def hook_response_from_cache(%ExVCR.Response{type: "error"} = response), do: response
