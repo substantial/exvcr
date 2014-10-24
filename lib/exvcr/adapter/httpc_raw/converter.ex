@@ -27,10 +27,10 @@ defmodule ExVCR.Adapter.HttpcRaw.Converter do
     }
   end
 
-  defp response_to_string({:ok, {{http_version, status_code, reason_phrase}, headers, body}}) do
+  defp response_to_string({:ok, {status_code, headers, body}}) do
     %ExVCR.Response{
       type: "ok",
-      status_code: [http_version, status_code, reason_phrase],
+      status_code: status_code,
       headers: parse_headers(headers),
       body: body
     }
