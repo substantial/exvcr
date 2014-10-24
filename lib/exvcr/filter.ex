@@ -11,8 +11,12 @@ defmodule ExVCR.Filter do
   end
 
   defp replace(body, []), do: body
-  defp replace(body, [{pattern, placeholder}|tail]) do
+  defp replace(body, [{pattern, placeholder}|tail]) when is_binary(body) do
     replace(String.replace(body, ~r/#{pattern}/, placeholder), tail)
+  end
+  defp replace(body, patterns) when is_list(body) do
+    safe_body = replace(to_string(body), patterns)
+    String.to_char_list(safe_body)
   end
 
   @doc """

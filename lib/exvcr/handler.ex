@@ -92,7 +92,7 @@ defmodule ExVCR.Handler do
     if params[:method] == nil || head[:request].method == nil do
       true
     else
-      to_string(params[:method]) == head[:request].method
+      to_string(params[:method]) == to_string(head[:request].method)
     end
   end
 

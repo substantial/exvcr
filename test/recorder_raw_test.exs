@@ -1,6 +1,6 @@
 defmodule ExVCR.RecorderRawTest do
   use ExUnit.Case, async: false
-  use ExVCR.Mock, adapter: ExVCR.Adapter.Httpc
+  use ExVCR.Mock, adapter: ExVCR.Adapter.HttpcRaw
 
   @dummy_cassette_dir "tmp/vcr_tmp/vcr_cassettes_raw"
   @port 34001
@@ -23,19 +23,19 @@ defmodule ExVCR.RecorderRawTest do
   test "forcefully getting response from server by removing cassette in advance" do
     use_cassette "server1" do
       {:ok, {_, _, body}} = :httpc.request(@url)
-      assert body =~ ~r/test_response/
+      assert to_string(body) =~ ~r/test_response/
     end
   end
 
   test "forcefully getting response from server, then loading from cache by recording twice" do
     use_cassette "server2" do
       {:ok, {_, _, body}} = :httpc.request(@url)
-      assert body =~ ~r/test_response/
+      assert to_string(body) =~ ~r/test_response/
     end
 
     use_cassette "server2" do
       {:ok, {_, _, body}} = :httpc.request(@url)
-      assert body =~ ~r/test_response/
+      assert to_string(body) =~ ~r/test_response/
     end
   end
 
@@ -43,7 +43,7 @@ defmodule ExVCR.RecorderRawTest do
     ExVCR.Config.filter_sensitive_data("test_response", "PLACEHOLDER")
     use_cassette "server_sensitive_data" do
       {:ok, {_, _, body}} = :httpc.request(@url)
-      assert body =~ ~r/PLACEHOLDER/
+      assert to_string(body) =~ ~r/PLACEHOLDER/
     end
     ExVCR.Config.filter_sensitive_data(nil)
   end
@@ -52,7 +52,7 @@ defmodule ExVCR.RecorderRawTest do
     ExVCR.Config.filter_url_params(true)
     use_cassette "example_ignore_url_params" do
       {:ok, {_, _, body}} = :httpc.request('#{@url}?should_not_be_contained')
-      assert body =~ ~r/test_response/
+      assert to_string(body) =~ ~r/test_response/
     end
     content = File.read!("#{__DIR__}/../#{@dummy_cassette_dir}/example_ignore_url_params.raw")
     refute String.contains?(content, "should_not_be_contained")
