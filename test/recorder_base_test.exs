@@ -4,14 +4,18 @@ defmodule ExVCR.RecorderBaseTest do
   alias ExVCR.Recorder
 
   test "initializes recorder" do
-    record = Recorder.start([test: true, fixture: "fixture/tmp"])
-    assert ExVCR.Actor.Options.get(record.options)     == [test: true, fixture: "fixture/tmp"]
+    record = Recorder.start(options)
+    assert ExVCR.Actor.Options.get(record.options)     == options
     assert ExVCR.Actor.Responses.get(record.responses) == []
   end
 
   test "test append/pop of recorder" do
-    record = Recorder.start([test: true, fixture: "fixture/tmp"])
+    record = Recorder.start(options)
     Recorder.append(record, "test")
     assert Recorder.pop(record) == "test"
+  end
+
+  defp options do
+    [test: true, fixture: "fixture/tmp", adapter: ExVCR.Adapter.IBrowse]
   end
 end
