@@ -6,7 +6,6 @@ defmodule ExVCR.Recorder do
   alias ExVCR.Handler
   alias ExVCR.Actor.Responses
   alias ExVCR.Actor.Options
-  alias ExVCR.Setting
 
   @doc """
   Initialize recorder.
@@ -43,7 +42,7 @@ defmodule ExVCR.Recorder do
     file_path   = get_file_path(recorder)
     custom_mode = options(recorder)[:custom]
     adapter     = options(recorder)[:adapter]
-    responses   = Setting.get(:format_module).load(file_path, custom_mode, adapter)
+    responses   = adapter.serializer.load(file_path, custom_mode, adapter)
     set(responses, recorder)
   end
 
@@ -53,7 +52,8 @@ defmodule ExVCR.Recorder do
   def save(recorder) do
     file_path = get_file_path(recorder)
     if File.exists?(file_path) == false do
-      Setting.get(:format_module).save(file_path, ExVCR.Recorder.get(recorder))
+      adapter = options(recorder)[:adapter]
+      adapter.serializer.save(file_path, ExVCR.Recorder.get(recorder))
     end
   end
 
@@ -62,11 +62,12 @@ defmodule ExVCR.Recorder do
   """
   def get_file_path(recorder) do
     opts = options(recorder)
+    adapter = opts[:adapter]
     directory = case opts[:custom] do
       true  -> ExVCR.Setting.get(:custom_library_dir)
       _     -> ExVCR.Setting.get(:cassette_library_dir)
     end
-    "#{directory}/#{opts[:fixture]}.#{Setting.get(:format)}"
+    "#{directory}/#{opts[:fixture]}.#{adapter.serializer.format}"
   end
 
   def options(recorder),        do: Options.get(recorder.options)

@@ -15,7 +15,6 @@ defmodule ExVCR.RecorderRawTest do
 
     Application.ensure_started(:inets)
     HttpServer.start(path: "/server", port: @port, response: "test_response")
-    ExVCR.Config.format(:raw)
     ExVCR.Config.cassette_library_dir(@dummy_cassette_dir)
     :ok
   end

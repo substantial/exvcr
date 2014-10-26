@@ -4,6 +4,11 @@ defmodule ExVCR.Marshal do
   """
 
   @doc """
+  Extension for th file saved and loaded.
+  """
+  def format, do: "raw"
+
+  @doc """
   Save responses into the Erlang file.
   """
   def save(file_name, responses) do

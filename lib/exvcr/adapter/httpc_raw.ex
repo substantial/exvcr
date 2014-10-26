@@ -74,5 +74,10 @@ defmodule ExVCR.Adapter.HttpcRaw do
   Default definitions for stub.
   """
   def default_stub_params(:headers), do: %{"content-type" => "text/html"}
-  def default_stub_params(:status_code), do: ["HTTP/1.1", 200, "OK"]
+  def default_stub_params(:status_code), do: {"HTTP/1.1", 200, "OK"}
+
+  @doc """
+  Module used for persistence: ExVCR.Marshal.
+  """
+  def serializer, do: ExVCR.Marshal
 end

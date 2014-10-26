@@ -47,6 +47,14 @@ defmodule ExVCR.Adapter do
         end
       end
       defoverridable [get_response_value_from_cache: 1]
+
+      @doc """
+      Module used for persistence. Default is ExVCR.JSON
+      """
+      def serializer do
+        ExVCR.JSON
+      end
+      defoverridable [serializer: 0]
     end
   end
 end

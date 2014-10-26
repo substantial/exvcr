@@ -4,6 +4,11 @@ defmodule ExVCR.JSON do
   """
 
   @doc """
+  Extension for th file saved and loaded.
+  """
+  def format, do: "json"
+
+  @doc """
   Save responses into the json file.
   """
   def save(file_name, responses) do

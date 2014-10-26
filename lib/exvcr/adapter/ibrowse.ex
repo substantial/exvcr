@@ -63,4 +63,9 @@ defmodule ExVCR.Adapter.IBrowse do
   """
   def default_stub_params(:headers), do: %{"Content-Type" => "text/html"}
   def default_stub_params(:status_code), do: 200
+
+  @doc """
+  Module used for persistence: ExVCR.JSON.
+  """
+  def serializer, do: ExVCR.JSON
 end
