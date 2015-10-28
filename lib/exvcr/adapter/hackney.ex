@@ -104,5 +104,5 @@ defmodule ExVCR.Adapter.Hackney do
   @doc """
   Module used for persistence: ExVCR.JSON.
   """
-  def serializer, do: ExVCR.JSON
+  def serializer, do: ExVCR.Marshal
 end
